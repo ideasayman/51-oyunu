@@ -1,0 +1,19 @@
+/* Base styles - can be extended if needed */
+
+/* Mobile touch optimizations */
+.touch-manipulation {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Prevent zoom on input focus on iOS */
+input, textarea, select {
+  font-size: 16px !important;
+}
+
+/* Better touch targets for mobile */
+button {
+  min-height: 44px;
+  -webkit-tap-highlight-color: transparent;
+}
+

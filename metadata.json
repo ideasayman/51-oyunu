@@ -1,0 +1,5 @@
+{
+  "name": "Copy of 51 Skor Tablosu",
+  "description": "A digital scoreboard for the popular Turkish card game 51 (Ellibir). Track points, manage rounds, and consult an AI referee for rules and game commentary.",
+  "requestFramePermissions": []
+}
