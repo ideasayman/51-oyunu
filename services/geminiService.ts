@@ -2,7 +2,9 @@ import { GoogleGenAI, Chat } from "@google/genai";
 import { PlayerWithTotal } from "../types";
 
 // Initialize the client. The API key is guaranteed to be in process.env.API_KEY.
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+const API_KEY = process.env.API_KEY || '';
+
+const ai = new GoogleGenAI({ apiKey: API_KEY });
 
 const MODEL_NAME = 'gemini-2.5-flash';
 
@@ -49,7 +51,7 @@ When asked about the score:
 `;
 
 export const createGameChat = (players: PlayerWithTotal[]): Chat => {
-  const playerContext = players.length > 0 
+  const playerContext = players.length > 0
     ? `Current Players: ${players.map(p => `${p.name} (Total: ${p.total})`).join(', ')}.`
     : "No players added yet.";
 
@@ -75,7 +77,7 @@ export const generateGameCommentary = async (players: PlayerWithTotal[]): Promis
       model: MODEL_NAME,
       contents: prompt,
     });
-    
+
     return response.text || "Oyun devam ediyor, herkesin şansı var!";
   } catch (error) {
     console.error("Gemini commentary error:", error);

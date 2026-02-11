@@ -112,9 +112,6 @@ const App: React.FC = () => {
   const [finalistIds, setFinalistIds] = useState<string[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const activeTheme = THEMES[themeColor];
-  const activeLayout = LAYOUT_THEMES[layoutMode];
-
   // Load from local storage on mount
   useEffect(() => {
     try {
@@ -124,22 +121,36 @@ const App: React.FC = () => {
         if (parsed.players && parsed.players.length > 0) {
           setPlayers(parsed.players);
           setRounds(parsed.rounds || []);
-          setThemeColor(parsed.themeColor || 'emerald');
-          setLayoutMode(parsed.layoutMode || 'light');
+          if (parsed.themeColor && THEMES[parsed.themeColor as ThemeColor]) {
+            setThemeColor(parsed.themeColor);
+          }
+          if (parsed.layoutMode && LAYOUT_THEMES[parsed.layoutMode as LayoutMode]) {
+            setLayoutMode(parsed.layoutMode);
+          }
           setGamePhase(parsed.gamePhase || 'normal');
           setFinalistIds(parsed.finalistIds || []);
           setView(GameView.SCOREBOARD);
         } else if (parsed.themeColor) {
-          setThemeColor(parsed.themeColor);
-          if (parsed.layoutMode) setLayoutMode(parsed.layoutMode);
+          if (THEMES[parsed.themeColor as ThemeColor]) {
+            setThemeColor(parsed.themeColor);
+          }
+          if (parsed.layoutMode && LAYOUT_THEMES[parsed.layoutMode as LayoutMode]) {
+            setLayoutMode(parsed.layoutMode);
+          }
         }
       }
     } catch (e) {
       console.error("Failed to load game state", e);
+      // If error, clear storage to prevent persistent crash
+      localStorage.removeItem(STORAGE_KEY);
     } finally {
       setIsLoaded(true);
     }
   }, []);
+
+  // Ensure valid theme and layout even if state is corrupted
+  const activeTheme = THEMES[themeColor] || THEMES['emerald'];
+  const activeLayout = LAYOUT_THEMES[layoutMode] || LAYOUT_THEMES['light'];
 
   // Save to local storage on change
   useEffect(() => {
